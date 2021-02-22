@@ -1,0 +1,31 @@
+4. New Companies 
+
+--Problem Statment
+Given the table schemas below, write a query to print the company_code, founder name, total number of lead managers, total number of senior managers, total number of managers, and total number of employees. Order your output by ascending company_code.
+
+--Sample Input
+
+1. company - company_code | founder
+2. lead_manager  - lead_manager_code | company_code
+3. senior_manager - senior_manager_code | lead_manager_code | company_code
+4. manager - manager_code | senior_manager_code | lead_manager_code | company_code
+5. employee - employee_code | manager_code | senior_manager_code | lead_manager_code | company_code
+
+--Sample Output
+
+C1 Monika 1 2 1 2
+C2 Samantha 1 1 2 2
+
+--Solution
+select c.company_code, c.founder, 
+    count(distinct lm.lead_manager_code),
+    count(distinct sm.senior_manager_code), 
+    count(distinct m.manager_code),
+    count(distinct e.employee_code) from company c 
+left join lead_manager lm on c.company_code = lm.company_code
+left join senior_manager sm on lm.lead_manager_code = sm.lead_manager_code
+left join manager m on sm.senior_manager_code = m.senior_manager_code
+left join employee e on m.manager_code = e.manager_code
+group by c.company_code, c.founder
+order by c.company_code
+
