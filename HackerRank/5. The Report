@@ -20,7 +20,7 @@ ID | Name     | Marks
 Grades Table
 Grade | Min_mark | Max_mark
 7     | 60       | 69
-8     | 70       | 79
+8     | 70       | 69
 9     | 80       | 89
 10    | 90       | 100
 
