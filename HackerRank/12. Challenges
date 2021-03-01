@@ -1,0 +1,34 @@
+12. Challenges
+
+--Problem Statment
+Write a query to print the hacker_id, name, and the total number of challenges created by each student. Sort your results by the total number of challenges in descending order. If more than one student created the same number of challenges, then sort the result by hacker_id. If more than one student created the same number of challenges and the count is less than the maximum number of challenges created, then exclude those students from the result.
+
+--Sample Input
+
+Hackers: The hacker_id is the id of the hacker, and name is the name of the hacker. 
+
+Challenges: The challenge_id is the id of the challenge, and hacker_id is the id of the student who created the challenge.
+
+--Sample Output
+21283 Angela 6
+88255 Patrick 5
+96196 Lisa 1
+
+--Solution
+with hacker_db as (
+select h.hacker_id, name, count(challenge_id) as challenges_created
+from hackers h inner join challenges c on h.hacker_id = c.hacker_id
+group by h.hacker_id, name)
+
+
+select hacker_id, name, challenges_created
+from(
+select hacker_id, name, challenges_created, 
+count(*) over (partition by challenges_created) as count_challenges_created, 
+(select max(challenges_created) from hacker_db) as max_challenges
+from hacker_db
+group by hacker_id, name, challenges_created)ss
+where challenges_created = max_challenges or count_challenges_created = 1
+order by challenges_created desc, hacker_id
+
+
